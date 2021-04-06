@@ -1,6 +1,7 @@
 """Bond Calculator
 
-This script allows the user to calculate the Yield-to-Maturity, Price, Duration, or Convexity of a bond. It is operated purely through a Command Line Interface (CLI).
+This script allows the user to calculate the Yield-to-Maturity, Price, Duration, or Convexity of a bond.
+It is operated purely through a Command Line Interface (CLI).
 """
 
 from pyfiglet import Figlet
