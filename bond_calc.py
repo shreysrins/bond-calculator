@@ -69,6 +69,60 @@ def _price() -> float:
     return _cash_flows(apr/freq, coupon/freq, face, freq*years)
 
 
+def _macaulay_duration(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1, price : float = 100.00) -> float:
+    """Calculates the Macaulay Duration of a bond.
+
+    Parameters
+    ----------
+    apr : float = 0.0
+        The bond's APR, or the value y in the Macaulay Duration formula.
+    coupon : float = 0.0
+        The annual coupon rate of the bond.
+    face : float = 100.00
+        The bond's face value.
+    freq : int = 1
+        The number of compounding periods in a year, or the value k in the Macaulay Duration formula.
+    maturity : int = 1
+        The bond's maturity, in years.
+    price : float = 100.00
+        The bond price, the value P_B in the Macaulay Duration formula.
+
+    Returns
+    -------
+    float
+        The Macaulay Duration of the bond.
+    """
+    cf = np.array([coupon*face for i in range(freq*maturity)])
+    cf[-1] += face
+
+    coefficients = np.fromfunction(lambda t: ((t+1)/freq)*((1 + (apr/freq))**(-(t+1)))/price, (freq*maturity,), dtype=int)
+
+    return np.sum(np.dot(cf, coefficients))
+
+
+def _duration_convexity() -> tuple:
+    """Calculates the Macaulay Duration, modified duration, and convexity of a bond.
+
+    Acquires all necessary parameters through command line input.
+
+    Returns
+    -------
+    tuple
+        The Macaulay Duration, modified duration, and convexity of a bond, in this order.
+    """
+    n = int(input("Years to maturity: "))
+    freq = int(input("Coupon payments per year: "))
+    coupon = float(input("Annual coupon rate (enter as number, e.g., '5' for 5%): "))/100
+    face = float(input("Face value: $"))
+    yld = float(input("Bond Equivalent Yield (enter as number, e.g., '5' for 5%): "))/100
+
+    price = _cash_flows((2*yld)/freq, coupon/freq, face, freq*n)
+
+    d = _macaulay_duration(2*yld, coupon, face, freq, n, price)
+    d_m = d/(1 + ((2*yld)/freq))
+    return d, d_m
+
+
 if __name__ == '__main__':
     f = Figlet(font='slant')
     print(f.renderText('Bond Calculator'))
