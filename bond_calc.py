@@ -50,6 +50,25 @@ def _ytm() -> float:
     return newton(lambda y: _cash_flows(y, coupon, face, nper) - price, 0.05)
 
 
+def _price() -> float:
+    """Calculates a bond's price.
+
+    Acquires all necessary parameters through command line input.
+
+    Returns
+    -------
+    float
+        The price of the desired bond.
+    """
+    face = float(input("What is the face value of this bond? $"))
+    apr = float(input("What is the APR of this bond? Enter as a number (e.g. '5' for 5%) "))/100
+    coupon = float(input("What is the annual coupon rate of this bond? Enter as a number (e.g. '5' for 5%) "))/100
+    freq = int(input("How many coupon payments per year? "))
+    years = int(input("How many years to maturity? "))
+
+    return _cash_flows(apr/freq, coupon/freq, face, freq*years)
+
+
 if __name__ == '__main__':
     f = Figlet(font='slant')
     print(f.renderText('Bond Calculator'))
@@ -65,5 +84,7 @@ if __name__ == '__main__':
 
         if choice == 1:
             print("Yield to Maturity: {:.2f}%".format(100*_ytm()))
+        elif choice == 2:
+            print("Price: ${:.2f}".format(_price()))
 
         exit = (input("Press 'x' to exit or any key to continue: ").strip() == "x")
