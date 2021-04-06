@@ -116,9 +116,9 @@ def _duration_convexity() -> tuple:
     face = float(input("Face value: $"))
     yld = float(input("Bond Equivalent Yield (enter as number, e.g., '5' for 5%): "))/100
 
-    price = _cash_flows((2*yld)/freq, coupon/freq, face, freq*n)
+    price = _cash_flows(yld/freq, coupon/freq, face, freq*n)
 
-    d = _macaulay_duration(2*yld, coupon, face, freq, n, price)
+    d = _macaulay_duration(yld, coupon, face, freq, n, price)
     d_m = d/(1 + ((2*yld)/freq))
     return d, d_m
 
