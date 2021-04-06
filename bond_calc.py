@@ -97,7 +97,7 @@ def _macaulay_duration(apr : float = 0.0, coupon : float = 0.0, face : float = 1
 
     coefficients = np.fromfunction(lambda t: ((t+1)/freq)*((1 + (apr/freq))**(-(t+1)))/price, (freq*maturity,), dtype=int)
 
-    return np.sum(np.dot(cf, coefficients))
+    return np.dot(cf, coefficients)
 
 
 def _convexity(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1, price : float = 100.00) -> float:
