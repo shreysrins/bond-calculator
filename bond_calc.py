@@ -28,7 +28,7 @@ def _cash_flows(discount: float = 0.0, coupon: float = 0.0, face: float = 100.00
         The present value (PV) of the bond's cash flows.
     """
     cf = np.fromfunction(lambda i: coupon*face/(1 + discount)**(i + 1), (nper,), dtype=int)
-    cf[-1] += face/(1 + discount)**(cf.shape[0]) # Acount for principal repayment in last period
+    cf[-1] += face/(1 + discount)**(cf.shape[0]) # Account for principal repayment in last period
     return np.sum(cf) # Return PV(Cash Flows)
 
 
