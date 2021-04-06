@@ -150,7 +150,7 @@ def _duration_convexity() -> tuple:
     price = _cash_flows(yld/freq, coupon/freq, face, freq*n)
 
     d = _macaulay_duration(yld, coupon, face, freq, n, price)
-    d_m = d/(1 + ((2*yld)/freq))
+    d_m = d/(1 + (yld/freq))
     c_0 = _convexity(yld, coupon, face, freq, n, price)
     return d, d_m, c_0
 
