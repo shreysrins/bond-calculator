@@ -92,12 +92,43 @@ def _macaulay_duration(apr : float = 0.0, coupon : float = 0.0, face : float = 1
     float
         The Macaulay Duration of the bond.
     """
-    cf = np.array([coupon*face for i in range(freq*maturity)])
+    cf = np.array([(coupon/freq)*face for i in range(freq*maturity)])
     cf[-1] += face
 
     coefficients = np.fromfunction(lambda t: ((t+1)/freq)*((1 + (apr/freq))**(-(t+1)))/price, (freq*maturity,), dtype=int)
 
     return np.sum(np.dot(cf, coefficients))
+
+
+def _convexity(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1, price : float = 100.00) -> float:
+    """Calculates the convexity of an option-free bond.
+
+    Parameters
+    ----------
+    apr : float = 0.0
+        The bond's APR, or the value y in the Macaulay Duration formula.
+    coupon : float = 0.0
+        The annual coupon rate of the bond.
+    face : float = 100.00
+        The bond's face value.
+    freq : int = 1
+        The number of compounding periods in a year, or the value k in the Macaulay Duration formula.
+    maturity : int = 1
+        The bond's maturity, in years.
+    price : float = 100.00
+        The bond price, the value P_B in the Macaulay Duration formula.
+
+    Returns
+    -------
+    float
+        The convexity of the bond.
+    """
+    cf = np.array([(coupon/freq)*face for i in range(freq*maturity)])
+    cf[-1] += face
+
+    coefficients = np.fromfunction(lambda t: (((t+1)*(t+2))/((1 + (apr/freq))**(t+3)*(freq**2)))/price, (freq*maturity,), dtype=int)
+
+    return np.dot(cf, coefficients)
 
 
 def _duration_convexity() -> tuple:
@@ -120,7 +151,8 @@ def _duration_convexity() -> tuple:
 
     d = _macaulay_duration(yld, coupon, face, freq, n, price)
     d_m = d/(1 + ((2*yld)/freq))
-    return d, d_m
+    c_0 = _convexity(yld, coupon, face, freq, n, price)
+    return d, d_m, c_0
 
 
 if __name__ == '__main__':
@@ -140,5 +172,12 @@ if __name__ == '__main__':
             print("Yield to Maturity: {:.2f}%".format(100*_ytm()))
         elif choice == 2:
             print("Price: ${:.2f}".format(_price()))
+        elif choice == 3:
+            d, d_m, c_0 = _duration_convexity()
+            print("Macaulay Duration: {:.4f}".format(d))
+            print("Modified Duration: {:.4f}".format(d_m))
+            print("Convexity: {:.4f}".format(c_0))
+        else:
+            print("Choice must be within the range 1 - 3.")
 
         exit = (input("Press 'x' to exit or any key to continue: ").strip() == "x")
