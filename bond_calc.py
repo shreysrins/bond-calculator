@@ -42,10 +42,10 @@ def _ytm() -> float:
     float
         The YTM of the desired bond, as a decimal.
     """
-    price = float(input("What is the price of this bond? $"))
-    nper = int(input("What is the total number of payment periods? "))
-    face = float(input("What is the face value of the bond? $"))
-    coupon = float(input("What is the coupon %age per period? Enter as a number (e.g. '5' for 5%) "))/100
+    price = float(input("Bond price: $"))
+    nper = int(input("Number of payment periods: "))
+    face = float(input("Face value: $"))
+    coupon = float(input("Coupon %age per period (enter as number, e.g., '5' for 5%): "))/100
 
     return newton(lambda y: _cash_flows(y, coupon, face, nper) - price, 0.05)
 
@@ -60,11 +60,11 @@ def _price() -> float:
     float
         The price of the desired bond.
     """
-    face = float(input("What is the face value of this bond? $"))
-    apr = float(input("What is the APR of this bond? Enter as a number (e.g. '5' for 5%) "))/100
-    coupon = float(input("What is the annual coupon rate of this bond? Enter as a number (e.g. '5' for 5%) "))/100
-    freq = int(input("How many coupon payments per year? "))
-    years = int(input("How many years to maturity? "))
+    face = float(input("Face value: $"))
+    apr = float(input("APR (enter as number, e.g., '5' for 5%): "))/100
+    coupon = float(input("Annual coupon rate (enter as number, e.g., '5' for 5%): "))/100
+    freq = int(input("Coupon payments per year: "))
+    years = int(input("Years to maturity: "))
 
     return _cash_flows(apr/freq, coupon/freq, face, freq*years)
 
