@@ -7,9 +7,9 @@ The command to run the calculator is `python3 bond_calc.py`. All instructions ar
 
 ## Dependencies
 Install all dependencies by running `pip3 install -r requirements.txt`.
- - pyfiglet (pip3 install pyfiglet)
- - NumPy >= v1.19.4 (pip3 install numpy)
- - SciPy >= v1.6.2 (pip3 install scipy)
+ - pyfiglet >= 0.8.post1 (pip3 install pyfiglet)
+ - NumPy ~= v1.19.4 (pip3 install numpy)
+ - SciPy ~= v1.6.2 (pip3 install scipy)
 
 ## Installation
 Installation is simply downloading the code from github.
