@@ -2,7 +2,7 @@
 Computes bond YTM, price, duration, or convexity.
 Run from a Command Line Interface (CLI).
 
-## Installation:
+## Installation
 Installation is simply downloading the code from GitHub. Enter the following at a terminal prompt to install in your home directory:
 
 ```bash
