@@ -2,18 +2,32 @@
 Computes bond YTM, price, duration, or convexity.
 Run from a Command Line Interface (CLI).
 
+## Installation:
+Installation is simply downloading the code from GitHub. Enter the following at a terminal prompt to install in your home directory:
+
+```bash
+$ cd
+$ git clone https://github.com/shreysrins/bond-calculator.git
+```
+
 ## Usage
-Open a terminal and navigate to the directory in which this repository is stored. The command to run the calculator is `python3 bond_calc.py`. All instructions and prompts are given in the terminal itself.
+Open a terminal and navigate to the directory in which this repository is stored. If you installed in your home directory, this is done with
+```bash
+$ cd ~/bond-calculator/
+```
+The command to run the calculator is
+```bash
+$ python3 bond_calc.py
+```
+All instructions and prompts are given in the terminal itself.
 
 ## Dependencies
 This code was developed and tested in Python 3.7.
 
-Install all dependencies by running `pip3 install -r requirements.txt`.
+Install all dependencies by opening a terminal and running
+```bash
+$ pip3 install -r requirements.txt
+```
  - pyfiglet >= 0.8.post1 (`pip3 install pyfiglet`)
  - NumPy ~= v1.19.4 (`pip3 install numpy`)
  - SciPy ~= v1.6.2 (`pip3 install scipy`)
-
-## Installation
-Installation is simply downloading the code from GitHub.
-
-```$ git clone https://github.com/shreysrins/bond-calculator.git```
