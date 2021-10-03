@@ -28,8 +28,10 @@ def _cash_flows(discount: float = 0.0, coupon: float = 0.0, face: float = 100.00
     float
         The present value (PV) of the bond's cash flows.
     """
+
     cf = np.fromfunction(lambda i: coupon*face/(1 + discount)**(i + 1), (nper,), dtype=int)
     cf[-1] += face/(1 + discount)**(cf.shape[0]) # Account for principal repayment in last period
+    
     return np.sum(cf) # Return PV(Cash Flows)
 
 
@@ -43,6 +45,7 @@ def _ytm() -> float:
     float
         The YTM of the desired bond, as a decimal.
     """
+
     price = float(input("Bond price: $"))
     nper = int(input("Number of payment periods: "))
     face = float(input("Face value: $"))
@@ -61,6 +64,7 @@ def _price() -> float:
     float
         The price of the desired bond.
     """
+    
     face = float(input("Face value: $"))
     apr = float(input("APR (enter as number, e.g., '5' for 5%): "))/100
     coupon = float(input("Annual coupon rate (enter as number, e.g., '5' for 5%): "))/100
@@ -93,6 +97,7 @@ def _macaulay_duration(apr : float = 0.0, coupon : float = 0.0, face : float = 1
     float
         The Macaulay Duration of the bond.
     """
+    
     cf = np.array([(coupon/freq)*face] * (freq*maturity))
     cf[-1] += face
 
@@ -124,6 +129,7 @@ def _convexity(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, f
     float
         The convexity of the bond.
     """
+    
     cf = np.array([(coupon/freq)*face] * (freq*maturity))
     cf[-1] += face
 
@@ -142,6 +148,7 @@ def _duration_convexity() -> tuple:
     tuple
         The Macaulay Duration, modified duration, and convexity of a bond, in this order.
     """
+    
     n = int(input("Years to maturity: "))
     freq = int(input("Coupon payments per year: "))
     coupon = float(input("Annual coupon rate (enter as number, e.g., '5' for 5%): "))/100
