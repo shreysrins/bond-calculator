@@ -33,3 +33,11 @@ The command to run the calculator is
 $ python3 bond_calc.py
 ```
 All instructions and prompts are given in the terminal itself.
+
+## Updating
+To check for and install updates, navigate to the folder where this project is stored in your terminal and run the `git pull` command. If you installed as specified [above](#installation), this can be done with the following terminal commands:
+```bash
+$ cd ~/bond-calculator/
+$ git status
+$ git pull
+```
