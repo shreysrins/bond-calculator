@@ -93,7 +93,7 @@ def _macaulay_duration(apr : float = 0.0, coupon : float = 0.0, face : float = 1
     float
         The Macaulay Duration of the bond.
     """
-    cf = np.array([(coupon/freq)*face for i in range(freq*maturity)])
+    cf = np.array([(coupon/freq)*face] * (freq*maturity))
     cf[-1] += face
 
     coefficients = np.fromfunction(lambda t: ((t+1)/freq)*((1 + (apr/freq))**(-(t+1)))/price, (freq*maturity,), dtype=int)
@@ -124,7 +124,7 @@ def _convexity(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, f
     float
         The convexity of the bond.
     """
-    cf = np.array([(coupon/freq)*face for i in range(freq*maturity)])
+    cf = np.array([(coupon/freq)*face] * (freq*maturity))
     cf[-1] += face
 
     coefficients = np.fromfunction(lambda t: (((t+1)*(t+2))/((1 + (apr/freq))**(t+3)*(freq**2)))/price, (freq*maturity,), dtype=int)
