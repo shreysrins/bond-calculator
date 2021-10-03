@@ -177,14 +177,14 @@ if __name__ == '__main__':
         choice = int(input("Enter your choice as a number: "))
 
         if choice == 1:
-            print("Yield to Maturity: {:.2f}%".format(100*_ytm()))
+            print("    | Yield to Maturity: {:.2f}%".format(100*_ytm()))
         elif choice == 2:
-            print("Price: ${:.2f}".format(_price()))
+            print("    | Price: ${:.2f}".format(_price()))
         elif choice == 3:
             d, d_m, c_0 = _duration_convexity()
-            print("Macaulay Duration: {:.4f}".format(d))
-            print("Modified Duration: {:.4f}".format(d_m))
-            print("Convexity: {:.4f}".format(c_0))
+            print("    | Macaulay Duration: {:.4f}".format(d))
+            print("    | Modified Duration: {:.4f}".format(d_m))
+            print("    | Convexity: {:.4f}".format(c_0))
         else:
             print("Choice must be within the range 1 - 3.")
 
