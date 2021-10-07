@@ -1,4 +1,5 @@
-"""Bond Calculator
+#!/usr/bin/env python
+"""Bond Calculator with associated functions.
 
 This script allows the user to calculate the Yield-to-Maturity, Price, Duration, or Convexity of a bond.
 It is operated purely through a Command Line Interface (CLI).
@@ -8,9 +9,17 @@ from pyfiglet import Figlet
 import numpy as np
 from scipy.optimize import newton
 
+__author__ = "Shreyas V. Srinivasan"
+__credits__ = ["Shreyas V. Srinivasan", "Deborah J. Lucas"]
 
-def _cash_flows(discount: float = 0.0, coupon: float = 0.0, face: float = 100.00, nper: int = 1) -> float:
-    """Calculates the present value of a bond's cash flows.
+__version__ = "1.0.1"
+__maintainer__ = "Shreyas V. Srinivasan"
+__email__ = "shreyass@alum.mit.edu"
+__status__ = "Production"
+
+
+def _npv_cash_flows(discount: float = 0.0, coupon: float = 0.0, face: float = 100.00, nper: int = 1) -> float:
+    """Calculates the net present value of a bond's cash flows.
 
     Parameters
     ----------
@@ -29,10 +38,10 @@ def _cash_flows(discount: float = 0.0, coupon: float = 0.0, face: float = 100.00
         The present value (PV) of the bond's cash flows.
     """
 
-    cf = np.fromfunction(lambda i: coupon*face/(1 + discount)**(i + 1), (nper,), dtype=int)
-    cf[-1] += face/(1 + discount)**(cf.shape[0]) # Account for principal repayment in last period
+    npv_cf = np.fromfunction(lambda i: coupon*face/(1 + discount)**(i + 1), (nper,), dtype=int)
+    npv_cf[-1] += face/(1 + discount)**(npv_cf.shape[0]) # Account for principal repayment in last period
     
-    return np.sum(cf) # Return PV(Cash Flows)
+    return np.sum(npv_cf)
 
 
 def _ytm() -> float:
@@ -51,7 +60,7 @@ def _ytm() -> float:
     face = float(input("Face value: $"))
     coupon = float(input("Coupon %age per period (enter as number, e.g., '5' for 5%): "))/100
 
-    return newton(lambda y: _cash_flows(y, coupon, face, nper) - price, 0.05)
+    return newton(lambda y: _npv_cash_flows(y, coupon, face, nper) - price, 0.05) # Use Newton's method to equate cash flows (as function of YTM) to price
 
 
 def _price() -> float:
@@ -71,7 +80,35 @@ def _price() -> float:
     freq = int(input("Coupon payments per year: "))
     years = int(input("Years to maturity: "))
 
-    return _cash_flows(apr/freq, coupon/freq, face, freq*years)
+    return _npv_cash_flows(apr/freq, coupon/freq, face, freq*years)
+
+
+def _weighted_cash_flows(coeffecients : np.array, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1) -> float:
+    """Calculates the weighted average of a series of bond cash flows.
+
+    Parameters
+    ----------
+    coefficients : np.array
+        Coefficients by which to weight the bond's cash flows when taking the average.
+    coupon : float = 0.0
+        The annual coupon rate of the bond.
+    face : float = 100.00
+        The bond's face value.
+    freq : int = 1
+        The number of compounding periods in a year.
+    maturity : int = 1
+        The bond's maturity, in years.
+
+    Returns
+    -------
+    float
+        The weighted average of a series of bond cash flows.
+    """
+
+    cf = np.array([(coupon/freq)*face] * (freq*maturity)) # Compute nominal future cash flows
+    cf[-1] += face # Account for principal repayment in last period
+
+    return np.dot(cf, coefficients)
 
 
 def _macaulay_duration(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1, price : float = 100.00) -> float:
@@ -97,13 +134,10 @@ def _macaulay_duration(apr : float = 0.0, coupon : float = 0.0, face : float = 1
     float
         The Macaulay Duration of the bond.
     """
-    
-    cf = np.array([(coupon/freq)*face] * (freq*maturity))
-    cf[-1] += face
 
-    coefficients = np.fromfunction(lambda t: ((t+1)/freq)*((1 + (apr/freq))**(-(t+1)))/price, (freq*maturity,), dtype=int)
+    coefficients = np.fromfunction(lambda t: ((t+1)/freq)*((1 + (apr/freq))**(-(t+1)))/price, (freq*maturity,), dtype=int) # Compute weighting for CFs from Macaulay Duration formula
 
-    return np.dot(cf, coefficients)
+    return _weighted_cash_flows(coeffecients, coupon, face, freq, maturity)
 
 
 def _convexity(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1, price : float = 100.00) -> float:
@@ -129,13 +163,10 @@ def _convexity(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, f
     float
         The convexity of the bond.
     """
-    
-    cf = np.array([(coupon/freq)*face] * (freq*maturity))
-    cf[-1] += face
 
-    coefficients = np.fromfunction(lambda t: (((t+1)*(t+2))/((1 + (apr/freq))**(t+3)*(freq**2)))/price, (freq*maturity,), dtype=int)
+    coefficients = np.fromfunction(lambda t: (((t+1)*(t+2))/((1 + (apr/freq))**(t+3)*(freq**2)))/price, (freq*maturity,), dtype=int) # Compute weighting for CFs from Convexity formula
 
-    return np.dot(cf, coefficients)
+    return _weighted_cash_flows(coeffecients, coupon, face, freq, maturity)
 
 
 def _duration_convexity() -> tuple:
@@ -155,7 +186,7 @@ def _duration_convexity() -> tuple:
     face = float(input("Face value: $"))
     yld = float(input("Bond Equivalent Yield (enter as number, e.g., '5' for 5%): "))/100
 
-    price = _cash_flows(yld/freq, coupon/freq, face, freq*n)
+    price = _npv_cash_flows(yld/freq, coupon/freq, face, freq*n)
 
     d = _macaulay_duration(yld, coupon, face, freq, n, price)
     d_m = d/(1 + (yld/freq))
