@@ -15,7 +15,7 @@ This code was developed and tested in Python 3.7. You can check your version of 
 $ python3 --version
 ```
 
-Install all dependencies by opening a terminal and running
+Install all dependencies by opening a terminal and running:
 ```bash
 $ pip3 install -r requirements.txt
 ```
@@ -24,18 +24,18 @@ $ pip3 install -r requirements.txt
  - SciPy ~= v1.6.2 (`pip3 install scipy`)
 
 ## Usage
-Open a terminal and navigate to the directory in which this repository is stored. If you installed in your home directory, this is done with
+Open a terminal and navigate to the directory in which this repository is stored. If you installed in your home directory, this is done with:
 ```bash
 $ cd ~/bond-calculator/
 ```
-The command to run the calculator is
+The command to run the calculator is:
 ```bash
 $ python3 bond_calc.py
 ```
 All instructions and prompts are given in the terminal itself.
 
 ## Updating
-To check for and install updates, navigate to the folder where this project is stored in your terminal and run the `git pull` command. If you installed as specified [above](#installation), this can be done with the following terminal commands:
+To check for and install updates: open a terminal, navigate to the directory in which this repository is stored, and run the `git pull` command. If you installed in your home directory, this is done with:
 ```bash
 $ cd ~/bond-calculator/
 $ git status
