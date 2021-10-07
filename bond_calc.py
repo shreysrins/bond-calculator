@@ -12,7 +12,7 @@ from scipy.optimize import newton
 __author__ = "Shreyas V. Srinivasan"
 __credits__ = ["Shreyas V. Srinivasan", "Deborah J. Lucas"]
 
-__version__ = "1.0.1"
+__version__ = "1.2.1"
 __maintainer__ = "Shreyas V. Srinivasan"
 __email__ = "shreyass@alum.mit.edu"
 __status__ = "Production"
