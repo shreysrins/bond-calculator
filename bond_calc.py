@@ -83,7 +83,7 @@ def _price() -> float:
     return _npv_cash_flows(apr/freq, coupon/freq, face, freq*years)
 
 
-def _weighted_cash_flows(coeffecients : np.array, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1) -> float:
+def _weighted_cash_flows(coefficients : np.array, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1) -> float:
     """Calculates the weighted average of a series of bond cash flows.
 
     Parameters
@@ -137,7 +137,7 @@ def _macaulay_duration(apr : float = 0.0, coupon : float = 0.0, face : float = 1
 
     coefficients = np.fromfunction(lambda t: ((t+1)/freq)*((1 + (apr/freq))**(-(t+1)))/price, (freq*maturity,), dtype=int) # Compute weighting for CFs from Macaulay Duration formula
 
-    return _weighted_cash_flows(coeffecients, coupon, face, freq, maturity)
+    return _weighted_cash_flows(coefficients, coupon, face, freq, maturity)
 
 
 def _convexity(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1, price : float = 100.00) -> float:
@@ -166,7 +166,7 @@ def _convexity(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, f
 
     coefficients = np.fromfunction(lambda t: (((t+1)*(t+2))/((1 + (apr/freq))**(t+3)*(freq**2)))/price, (freq*maturity,), dtype=int) # Compute weighting for CFs from Convexity formula
 
-    return _weighted_cash_flows(coeffecients, coupon, face, freq, maturity)
+    return _weighted_cash_flows(coefficients, coupon, face, freq, maturity)
 
 
 def _duration_convexity() -> tuple:
