@@ -12,10 +12,38 @@ from scipy.optimize import newton
 __author__ = "Shreyas V. Srinivasan"
 __credits__ = ["Shreyas V. Srinivasan", "Deborah J. Lucas"]
 
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 __maintainer__ = "Shreyas V. Srinivasan"
 __email__ = "shreyass@alum.mit.edu"
 __status__ = "Production"
+
+
+def _weighted_cash_flows(coefficients : np.array, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1) -> float:
+    """Calculates the weighted average of a series of bond cash flows.
+
+    Parameters
+    ----------
+    coefficients : np.array
+        Coefficients by which to weight the bond's cash flows when taking the average.
+    coupon : float = 0.0
+        The annual coupon rate of the bond.
+    face : float = 100.00
+        The bond's face value.
+    freq : int = 1
+        The number of compounding periods in a year.
+    maturity : int = 1
+        The bond's maturity, in years.
+
+    Returns
+    -------
+    float
+        The weighted average of a series of bond cash flows.
+    """
+
+    cf = np.array([(coupon/freq)*face] * (freq*maturity)) # Compute nominal future cash flows
+    cf[-1] += face # Account for principal repayment in last period
+
+    return np.dot(cf, coefficients)
 
 
 def _npv_cash_flows(discount: float = 0.0, coupon: float = 0.0, face: float = 100.00, nper: int = 1) -> float:
@@ -26,7 +54,7 @@ def _npv_cash_flows(discount: float = 0.0, coupon: float = 0.0, face: float = 10
     discount : float = 0.0
         The discount rate for the cash flows (equivalently, the bond's yield)
     coupon : float = 0.0
-        The coupon rate of the bond.
+        The per-period coupon rate of the bond.
     face : float = 100.00
         The bond's face value, or principal amount repaid at maturity.
     nper : int = 1
@@ -38,10 +66,9 @@ def _npv_cash_flows(discount: float = 0.0, coupon: float = 0.0, face: float = 10
         The present value (PV) of the bond's cash flows.
     """
 
-    npv_cf = np.fromfunction(lambda i: coupon*face/(1 + discount)**(i + 1), (nper,), dtype=int)
-    npv_cf[-1] += face/(1 + discount)**(npv_cf.shape[0]) # Account for principal repayment in last period
+    coefficients = np.fromfunction(lambda i: 1/(1 + discount)**(i + 1), (nper,), dtype=int)
     
-    return np.sum(npv_cf)
+    return _weighted_cash_flows(coefficients=coefficients, coupon=coupon, face=face, maturity=nper)
 
 
 def _ytm() -> float:
@@ -81,34 +108,6 @@ def _price() -> float:
     years = int(input("Years to maturity: "))
 
     return _npv_cash_flows(apr/freq, coupon/freq, face, freq*years)
-
-
-def _weighted_cash_flows(coefficients : np.array, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1) -> float:
-    """Calculates the weighted average of a series of bond cash flows.
-
-    Parameters
-    ----------
-    coefficients : np.array
-        Coefficients by which to weight the bond's cash flows when taking the average.
-    coupon : float = 0.0
-        The annual coupon rate of the bond.
-    face : float = 100.00
-        The bond's face value.
-    freq : int = 1
-        The number of compounding periods in a year.
-    maturity : int = 1
-        The bond's maturity, in years.
-
-    Returns
-    -------
-    float
-        The weighted average of a series of bond cash flows.
-    """
-
-    cf = np.array([(coupon/freq)*face] * (freq*maturity)) # Compute nominal future cash flows
-    cf[-1] += face # Account for principal repayment in last period
-
-    return np.dot(cf, coefficients)
 
 
 def _macaulay_duration(apr : float = 0.0, coupon : float = 0.0, face : float = 100.00, freq : int = 1, maturity : int = 1, price : float = 100.00) -> float:
@@ -202,7 +201,7 @@ if __name__ == '__main__':
     while(not exit):
         print("---------------------------------------------")
         print("Please select one of the following functions:")
-        print("    1. YTM")
+        print("    1. Yield to Maturity")
         print("    2. Price")
         print("    3. Duration & Convexity")
         choice = int(input("Enter your choice as a number: "))
