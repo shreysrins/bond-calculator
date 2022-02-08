@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """Bond Calculator with associated functions.
 
 This script allows the user to calculate the Yield-to-Maturity, Price, Duration, or Convexity of a bond.
@@ -12,7 +12,7 @@ from scipy.optimize import newton
 __author__ = "Shreyas V. Srinivasan"
 __credits__ = ["Shreyas V. Srinivasan", "Deborah J. Lucas"]
 
-__version__ = "1.2.2"
+__version__ = "1.2.3"
 __maintainer__ = "Shreyas V. Srinivasan"
 __email__ = "shreyass@alum.mit.edu"
 __status__ = "Production"
@@ -67,7 +67,7 @@ def _npv_cash_flows(discount: float = 0.0, coupon: float = 0.0, face: float = 10
     """
 
     coefficients = np.fromfunction(lambda i: 1/(1 + discount)**(i + 1), (nper,), dtype=int)
-    
+
     return _weighted_cash_flows(coefficients=coefficients, coupon=coupon, face=face, maturity=nper)
 
 
@@ -204,12 +204,15 @@ if __name__ == '__main__':
         print("    1. Yield to Maturity")
         print("    2. Price")
         print("    3. Duration & Convexity")
-        choice = int(input("Enter your choice as a number: "))
+        try:
+            choice = int(input("Enter your choice as a number: "))
+        except:
+            choice = 0
 
         if choice == 1:
             print("    | Yield to Maturity: {:.2f}%".format(100*_ytm()))
         elif choice == 2:
-            print("    | Price: ${:.2f}".format(_price()))
+            print("    | Price: ${:.2f}".format(price()))
         elif choice == 3:
             d, d_m, c_0 = _duration_convexity()
             print("    | Macaulay Duration: {:.4f}".format(d))
