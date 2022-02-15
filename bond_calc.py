@@ -12,7 +12,7 @@ from scipy.optimize import newton
 __author__ = "Shreyas V. Srinivasan"
 __credits__ = ["Shreyas V. Srinivasan", "Deborah J. Lucas"]
 
-__version__ = "1.2.3"
+__version__ = "1.2.4"
 __maintainer__ = "Shreyas V. Srinivasan"
 __email__ = "shreyass@alum.mit.edu"
 __status__ = "Production"
@@ -82,10 +82,10 @@ def _ytm() -> float:
         The YTM of the desired bond, as a decimal.
     """
 
-    price = float(input("Bond price: $"))
-    nper = int(input("Number of payment periods: "))
-    face = float(input("Face value: $"))
-    coupon = float(input("Coupon %age per period (enter as number, e.g., '5' for 5%): "))/100
+    price = float(input("> Bond price: $"))
+    nper = int(input("> Number of payment periods: "))
+    face = float(input("> Face value: $"))
+    coupon = float(input("> Coupon %age per period (enter as number, e.g., '5' for 5%): "))/100
 
     return newton(lambda y: _npv_cash_flows(y, coupon, face, nper) - price, 0.05) # Use Newton's method to equate cash flows (as function of YTM) to price
 
@@ -101,11 +101,11 @@ def _price() -> float:
         The price of the desired bond.
     """
     
-    face = float(input("Face value: $"))
-    apr = float(input("APR (enter as number, e.g., '5' for 5%): "))/100
-    coupon = float(input("Annual coupon rate (enter as number, e.g., '5' for 5%): "))/100
-    freq = int(input("Coupon payments per year: "))
-    years = int(input("Years to maturity: "))
+    face = float(input("> Face value: $"))
+    apr = float(input("> APR (enter as number, e.g., '5' for 5%): "))/100
+    coupon = float(input("> Annual coupon rate (enter as number, e.g., '5' for 5%): "))/100
+    freq = int(input("> Coupon payments per year: "))
+    years = int(input("> Years to maturity: "))
 
     return _npv_cash_flows(apr/freq, coupon/freq, face, freq*years)
 
@@ -179,11 +179,11 @@ def _duration_convexity() -> tuple:
         The Macaulay Duration, modified duration, and convexity of a bond, in this order.
     """
     
-    n = int(input("Years to maturity: "))
-    freq = int(input("Coupon payments per year: "))
-    coupon = float(input("Annual coupon rate (enter as number, e.g., '5' for 5%): "))/100
-    face = float(input("Face value: $"))
-    yld = float(input("Bond Equivalent Yield (enter as number, e.g., '5' for 5%): "))/100
+    n = int(input("> Years to maturity: "))
+    freq = int(input("> Coupon payments per year: "))
+    coupon = float(input("> Annual coupon rate (enter as number, e.g., '5' for 5%): "))/100
+    face = float(input("> Face value: $"))
+    yld = float(input("> Bond Equivalent Yield (enter as number, e.g., '5' for 5%): "))/100
 
     price = _npv_cash_flows(yld/freq, coupon/freq, face, freq*n)
 
