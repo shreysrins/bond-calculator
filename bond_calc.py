@@ -212,7 +212,7 @@ if __name__ == '__main__':
         if choice == 1:
             print("    | Yield to Maturity: {:.2f}%".format(100*_ytm()))
         elif choice == 2:
-            print("    | Price: ${:.2f}".format(price()))
+            print("    | Price: ${:.2f}".format(_price()))
         elif choice == 3:
             d, d_m, c_0 = _duration_convexity()
             print("    | Macaulay Duration: {:.4f}".format(d))
